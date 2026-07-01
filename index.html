@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Sebastián CH - Arquitectura & BIM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Pinstripe:ital@0;1&family=Changa:wght@700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        body, html { 
+            margin: 0; padding: 0; width: 100%; min-height: 100vh; overflow-x: hidden; 
+            background-color: #F6F7F9; 
+            font-family: 'Montserrat', sans-serif;
+            color: #000000;
+        }
+
+        /* CURSOR CAD PERSONALIZADO (Cruz larga con cuadrito al centro) */
+        body {
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cline x1='50' y1='0' x2='50' y2='100' stroke='black' stroke-width='0.5'/%3E%3Cline x1='0' y1='50' x2='100' y2='50' stroke='black' stroke-width='0.5'/%3E%3Crect x='46' y='46' width='8' height='8' fill='white' stroke='black' stroke-width='1'/%3E%3C/svg%3E") 50 50, crosshair;
+        }
+        /* Cursor cuando tocas botones/links (La cruz y el cuadrito cambian a color INDIGO #3711BF) */
+        a, button, .nav-btn, .nav-icon, .page-dot, .logo-img, .pdf-link, .profile-img-container {
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cline x1='50' y1='0' x2='50' y2='100' stroke='%233711BF' stroke-width='0.8'/%3E%3Cline x1='0' y1='50' x2='100' y2='50' stroke='%233711BF' stroke-width='0.8'/%3E%3Crect x='46' y='46' width='8' height='8' fill='%233711BF' stroke='%233711BF' stroke-width='1'/%3E%3C/svg%3E") 50 50, pointer !important;
+        }
+
+        /* ESCÁNER INICIAL */
+        #scanner-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #280D8C; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            transition: opacity 0.8s ease-in-out; pointer-events: none;
+        }
+        .scanner-text { 
+            font-family: 'Consolas', 'Lucida Console', monospace; font-size: 1.5rem; 
+            letter-spacing: 0.3em; text-align: center; color: #FFFFFF;
+        }
+        .scanner-line { 
+            position: absolute; top: -10px; left: 0; width: 100%; height: 2px; 
+            background: #000; box-shadow: 0 0 15px rgba(0,0,0,0.8);
+            animation: scan 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+        }
+        @keyframes scan { 0% { top: -10px; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100vh; opacity: 0; } }
+        body.loaded #scanner-overlay { opacity: 0; pointer-events: none; }
+
+        /* EFECTOS DE FONDO (Retícula visible y Parallax intenso) */
+        #grid-bg {
+            position: fixed; top: -30px; left: -30px; width: calc(100vw + 60px); height: calc(100vh + 60px);
+            background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+            background-size: 80px 80px; z-index: -3; pointer-events: none;
+            transition: transform 0.1s ease-out;
+        }
+
+        .plan-bg {
+            position: fixed; top: -5%; left: -5%; width: 110vw; height: 110vh;
+            background-image: url('Efecto de plano.png'); 
+            background-size: cover; background-position: center;
+            opacity: 0.15; z-index: -2; mix-blend-mode: multiply;
+            transition: transform 0.1s ease-out; pointer-events: none;
+        }
+
+        .glass-background-orb {
+            position: fixed; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.6; pointer-events: none;
+        }
+        .orb-1 { width: 600px; height: 600px; background-color: #E0E5EC; top: 10%; left: -10%; }
+        .orb-2 { width: 500px; height: 500px; background-color: #E8E8E8; bottom: 20%; left: 30%; }
+
+        #cv {
+            position: relative; width: 100%; min-height: 100vh;
+            padding-top: 130px; padding-bottom: 120px; box-sizing: border-box; 
+            opacity: 0; transition: opacity 1.5s ease-in;
+        }
+        body.loaded #cv { opacity: 1; }
+
+        .page-label { 
+            position: absolute; top: 40px; left: 5vw; font-size: 0.85rem; 
+            letter-spacing: 0.15em; font-weight: 500; z-index: 10; line-height: 1.6;
+        }
+        
+        .social-nav-container { 
+            position: absolute; top: 40px; right: 5vw; display: flex; 
+            flex-direction: column; align-items: flex-end; gap: 10px; z-index: 10; 
+        }
+        .social-nav-buttons { display: flex; gap: 15px; }
+        .nav-btn {
+            text-decoration: none; color: #888888; font-size: 0.75rem; letter-spacing: 0.05em;
+            padding: 8px 16px; border: 1px solid #E0E0E0; background-color: rgba(255,255,255,0.8);
+            transition: all 0.2s ease; box-shadow: 2px 2px 0px #E0E0E0; font-weight: 600;
+        }
+        
+        /* HOVER DE BOTONES ESTÁNDAR A AZUL */
+        .nav-btn:hover { color: #3711BF; border-color: #3711BF; box-shadow: 3px 3px 0px #3711BF; transform: translate(-1px, -1px); }
+        
+        /* BOTÓN DESTACADO Y SU HOVER A AZUL */
+        .nav-btn.highlight { background-color: #000; color: #FFF; border-color: #000; }
+        .nav-btn.highlight:hover { background-color: #3711BF; border-color: #3711BF; box-shadow: 3px 3px 0px #3711BF; color: #FFF; }
+
+        .contact-mail { font-family: 'Consolas', 'Lucida Console', monospace; font-size: 0.8rem; color: #555; text-decoration: none; transition: color 0.2s;}
+        .contact-mail:hover { color: #000; }
+
+        .cv-grid {
+            position: relative; z-index: 2; display: grid; grid-template-columns: 1.1fr 1fr; 
+            gap: 5vw; padding: 0 5vw; align-items: start;
+        }
+
+        .left-col { display: flex; flex-direction: column; gap: 40px; }
+        .right-col { display: flex; flex-direction: column; gap: 40px; min-width: 0; position: relative; padding-top: 0; }
+
+        .glass-card {
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(55, 17, 191, 0.12), transparent 40%), rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(25px) saturate(120%);
+            -webkit-backdrop-filter: blur(25px) saturate(120%);
+            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.9);
+            padding: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); 
+            position: relative; overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        /* SOBREESCRITURA DE LA TARJETA EN LA COLUMNA IZQUIERDA (Sin efecto de aura) */
+        .left-col .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(55, 17, 191, 0.3);
+        }
+
+        .microdata { position: absolute; font-family: 'Consolas', 'Lucida Console', monospace; font-size: 0.6rem; color: #999; line-height: 1.4; z-index: 5; pointer-events: none; }
+        .md-top-right { top: 20px; right: 20px; text-align: right; }
+        .md-bottom-left { bottom: 20px; left: 20px; }
+
+        .profile-img-wrapper { width: 100%; display: flex; justify-content: flex-start; margin-bottom: 35px; }
+        
+        /* FOTO DE PERFIL SIN BORDES NI SOMBRA */
+        .profile-img-container {
+            width: 75%; 
+            aspect-ratio: 16 / 9; 
+            position: relative; z-index: 2; overflow: hidden; 
+            border-radius: 10px;
+        }
+        .profile-img-container img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        
+        .profile-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 40%, transparent 100%);
+            display: flex; flex-direction: column; justify-content: center; padding-left: 20px;
+            transform: translateX(-100%); transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            font-family: 'Consolas', 'Lucida Console', monospace; font-size: 0.85rem; color: #000; line-height: 1.6;
+        }
+        .profile-img-container:hover .profile-overlay { transform: translateX(0); }
+        
+        /* TÍTULO OVERLAY A AZUL */
+        .overlay-title { font-weight: bold; margin-bottom: 10px; color: #3711BF; }
+
+        /* TÍTULO DE ROL A AZUL */
+        .role-title { 
+            font-family: 'Alumni Sans Pinstripe', sans-serif; font-size: 3.2rem; 
+            line-height: 0.9; text-transform: uppercase; margin-bottom: 20px; margin-top: -10px;
+            color: #3711BF; text-align: left;
+        }
+        .profile-desc { font-size: 0.9rem; line-height: 1.6; text-align: justify; color: #444; margin-bottom: 40px; }
+        
+        /* HEADER DE SECCIÓN A AZUL */
+        .section-header {
+            font-family: 'Changa', sans-serif; font-size: 1.1rem; text-transform: uppercase;
+            color: #3711BF;
+            letter-spacing: 0.05em; margin-bottom: 20px; border-bottom: 1px solid rgba(55,17,191,0.2); padding-bottom: 10px;
+        }
+        .timeline-item { margin-bottom: 25px; }
+        .timeline-date { font-size: 0.75rem; color: #888; font-weight: 600; margin-bottom: 4px; }
+        .timeline-role { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; color: #222; }
+        .timeline-place { font-size: 0.85rem; font-style: italic; color: #555; margin-bottom: 6px; }
+        .timeline-details { font-size: 0.85rem; color: #666; line-height: 1.4; }
+        
+        .timeline-item:hover .timeline-role { color: #3711BF; transition: color 0.3s ease; }
+        .timeline-item:hover .timeline-date { color: #3711BF; transition: color 0.3s ease; }
+
+        .pdf-link {
+            display: inline-block; margin-top: 8px; font-size: 0.65rem; text-decoration: none;
+            color: #000; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid #000;
+            transition: opacity 0.2s;
+        }
+        .pdf-link:hover { opacity: 0.5; }
+
+        .skills-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .skill-tag {
+            font-size: 0.7rem; padding: 6px 14px; background-color: #f8f9fa;
+            border: 1px solid rgba(0,0,0,0.05); border-radius: 20px; color: #222; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        .language-group { margin-bottom: 15px; }
+        .lang-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 500; text-transform: uppercase; margin-bottom: 6px; }
+        .bar-container { position: relative; width: 100%; height: 3px; background-color: #F0F0F0; border-radius: 2px; }
+        .bar-fill { position: absolute; top: 0; left: 0; height: 100%; background-color: #000000; width: 0%; transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1); }
+
+        .software-category { margin-bottom: 30px; }
+        
+        /* TÍTULO DE CATEGORÍAS A AZUL */
+        .category-title {
+            font-size: 0.85rem; font-weight: 700; color: #3711BF; text-transform: uppercase; 
+            margin-bottom: 15px; border-left: 3px solid #3711BF; padding-left: 10px;
+        }
+        .software-list { display: flex; flex-direction: column; gap: 10px; }
+        
+        .skill-line-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 6px; border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .skill-line-item:hover { border-bottom: 1px solid rgba(55, 17, 191, 0.3); padding-left: 5px; }
+        
+        .skill-name { font-size: 0.75rem; font-weight: 600; color: #333; text-transform: uppercase; transition: color 0.3s ease; }
+        .skill-line-item:hover .skill-name { color: #3711BF; }
+        
+        .mini-circle-wrapper { position: relative; width: 22px; height: 22px; }
+        .mini-circle-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+        .mini-circle-bg { fill: none; stroke: #eee; stroke-width: 3; }
+        
+        .mini-circle-progress { 
+            fill: none; stroke: #000; stroke-width: 3; stroke-linecap: round; 
+            stroke-dasharray: 62.83; 
+            stroke-dashoffset: 62.83; 
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.22, 1, 0.36, 1), stroke 0.3s ease;
+        }
+        .skill-line-item:hover .mini-circle-progress { stroke: #3711BF; }
+
+        .software-ticker-wrapper { width: 100%; padding: 15px 0; border-top: 1px solid #F0F0F0; border-bottom: 1px solid #F0F0F0; overflow: hidden; margin-bottom: 20px;}
+        .logo-ticker-container { position: relative; width: 100%; height: 40px; overflow: hidden; display: flex; align-items: center; }
+        .logo-track { display: flex; gap: 50px; animation: scrollLogos 25s linear infinite; white-space: nowrap; width: max-content; }
+        .logo-img { height: 28px; width: auto; opacity: 0.4; filter: grayscale(100%); transition: all 0.4s ease; }
+        .logo-img:hover { opacity: 1; filter: grayscale(0%); transform: scale(1.1); }
+        .logo-ticker-container:hover .logo-track { animation-play-state: paused; }
+        @keyframes scrollLogos { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        .render-gallery { width: 100%; margin: 0 auto; display: flex; flex-direction: column; }
+        
+        .render-caption-multi {
+            font-family: 'Consolas', 'Lucida Console', monospace; font-size: 0.75rem; 
+            color: #333; border-left: 2px solid #000; padding-left: 12px; margin-bottom: 15px;
+            line-height: 1.4; opacity: 1; transition: opacity 0.3s ease; height: 45px;
+        }
+
+        .render-display {
+            width: 100%; aspect-ratio: 16 / 9; background-color: #e0e0e0;
+            border-radius: 8px; overflow: hidden; margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);
+        }
+        .render-display img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 1; transition: opacity 0.3s ease-in-out;
+        }
+        .render-display img.fade-out { opacity: 0; }
+        
+        .render-controls { display: flex; gap: 15px; align-items: center; justify-content: center; }
+        .nav-icon { background: none; border: none; font-size: 1.2rem; color: #AAA; transition: color 0.2s; padding: 0; line-height: 1; }
+        .nav-icon:hover { color: #3711BF; }
+        .page-dots { display: flex; gap: 8px; align-items: center; }
+        .page-dot { width: 8px; height: 8px; background-color: #DDD; border-radius: 50%; transition: background-color 0.2s, transform 0.2s; }
+        .page-dot.active { background-color: #3711BF; transform: scale(1.2); box-shadow: 0 0 5px rgba(55,17,191,0.4); }
+
+        @media (max-width: 900px) {
+            .cv-grid { grid-template-columns: 1fr; gap: 40px; }
+            .social-nav-container { top: 80px; left: 5vw; align-items: flex-start; right: auto; }
+            .social-nav-buttons { flex-wrap: wrap; }
+            #cv { padding-top: 180px; }
+            .profile-img-container { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="scanner-overlay">
+        <div class="scanner-text">SEBASTIÁN CH<br>ARQUITECTURA</div>
+        <div class="scanner-line"></div>
+    </div>
+
+    <div id="grid-bg"></div>
+    <div class="plan-bg"></div>
+
+    <section id="cv">
+        <div class="glass-background-orb orb-1"></div>
+        <div class="glass-background-orb orb-2"></div>
+
+        <div class="page-label">
+            SEBASTIÁN CH | 2026<br>
+            <span style="font-size: 0.7rem; color: #555;">Arquitectura | BIM | Diseño Paramétrico | Visualización | Planeación Urbana</span>
+        </div>
+        
+        <div class="social-nav-container">
+            <div class="social-nav-buttons">
+                <a href="Sebastian_CH_CV.pdf" download class="nav-btn highlight">Descargar CV</a>
+                <a href="http://www.behance.net/sebastichavez14" target="_blank" class="nav-btn">Behance</a>
+                <a href="https://wa.me/qr/IEKFEKYEGOZWA1" target="_blank" class="nav-btn">WhatsApp</a>
+            </div>
+            <a href="mailto:sebas.cham@gmail.com" class="contact-mail">sebas.cham@gmail.com</a>
+        </div>
+
+        <div class="cv-grid">
+            <div class="left-col">
+                <div class="glass-card">
+                    <div class="microdata md-top-right">PROJECT FILE:<br>SEBASTIAN_CH.CV</div>
+                    <div class="microdata md-bottom-left">STATUS: ACTIVE<br>VERSION: 2026.01</div>
+
+                    <div class="profile-img-wrapper">
+                        <div class="profile-img-container">
+                            <img src="tu-foto-v2.jpg" alt="Sebastián CH" onerror="this.src='https://placehold.co/800x450/EEE/333?text=FOTO+PERFIL'">
+                            <div class="profile-overlay">
+                                <div class="overlay-title">ARCHITECTURE<br>BIM<br>DIGITAL PROCESSES</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Formación Académica</div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2021 - 2026 (10º Semestre)</div>
+                        <div class="timeline-role">Licenciatura en Arquitectura</div>
+                        <div class="timeline-place">Universidad Autónoma de Querétaro (UAQ)</div>
+                    </div>
+
+                    <div class="section-header">Experiencia Profesional</div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2026-01</div>
+                        <div class="timeline-role">PASANTÍA</div>
+                        <div class="timeline-place">XQSOMOSARQ</div>
+                        <div class="timeline-details">Participé en el diseño arquitectónico de proyectos de vivienda unifamiliar y naves industriales, con diseño y cálculo de instalaciones hidráulicas, eléctricas y de gas.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2026-01</div>
+                        <div class="timeline-role">PRÁCTICAS PROFESIONALES</div>
+                        <div class="timeline-place">Asistente de investigación urbanística - Dr. Miguel Ángel Bartorila</div>
+                        <div class="timeline-details">Desarrollo de estrategias urbanas y análisis territorial para la planeación futura de la comunidad de Concá. Elaboración de cartografía avanzada en QGIS y representación de información espacial.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025 (Servicio Social)</div>
+                        <div class="timeline-role">Despacho de Proyectos FI-UAQ</div>
+                        <div class="timeline-place">Facultad de Ingeniería</div>
+                        <div class="timeline-details">Ejecución de levantamientos arquitectónicos, remodelación y adecuación bioclimática. Elaboración de catálogos de conceptos y estimación de costos preliminares.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2023 - Actualidad</div>
+                        <div class="timeline-role">Freelance BIM & Modelado 3D</div>
+                        <div class="timeline-place">Colaboración con Arq. Alejandro Guerra</div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="section-header">Habilidades</div>
+                    <div class="skills-list" style="margin-bottom: 35px;">
+                        <span class="skill-tag">Liderazgo</span>
+                        <span class="skill-tag">Adaptabilidad</span>
+                        <span class="skill-tag">Pensamiento Crítico</span>
+                        <span class="skill-tag">Resolución de Conflictos</span>
+                        <span class="skill-tag">Atención al Detalle</span>
+                        <span class="skill-tag">Gestión de Datos BIM</span>
+                    </div>
+
+                    <div class="section-header">Reconocimientos & Cursos</div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">CONCURSO DE ARQ E INTERIORISMO PARA TALENTOS EMERGENTES</div>
+                        <div class="timeline-details">SHERWIN WILLIAMS | Actualmente participando.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">UNESCO Street Design Challenge 2024</div>
+                        <a href="UNESCO_2024.pdf" target="_blank" class="pdf-link">Ver Credencial PDF</a>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">Archicad BIM Certification</div>
+                        <div class="timeline-details">BIM AUTHOR (Graphisoft).</div>
+                        <a href="certificado.pdf" target="_blank" class="pdf-link">Ver Certificado PDF</a>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">CURSO DE INSTALACIONES DE GAS L.P.</div>
+                        <div class="timeline-details">Colegio de Arquitectos del Estado de Querétaro.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-col">
+                
+                <h2 class="role-title">Diseñador Arquitectónico |<br><span style="font-size: 0.7em;">BIM, MEP & Procesos Digitales</span></h2>
+                <div class="profile-desc">
+                    Estudiante de arquitectura en etapa final de formación. Mi práctica integra diseño arquitectónico, modelado BIM y herramientas digitales para optimizar procesos de representación y desarrollo de proyectos.
+                </div>
+
+                <div>
+                    <div class="section-header">Idiomas</div>
+                    <div class="language-group"><div class="lang-label"><span>Inglés (C2)</span><span>Avanzado</span></div><div class="bar-container"><div class="bar-fill" data-width="95%"></div></div></div>
+                    <div class="language-group"><div class="lang-label"><span>Italiano (A2/B1)</span><span>Intermedio</span></div><div class="bar-container"><div class="bar-fill" data-width="50%"></div></div></div>
+                    <div class="language-group"><div class="lang-label"><span>Francés (A2)</span><span>Básico</span></div><div class="bar-container"><div class="bar-fill" data-width="25%"></div></div></div>
+                </div>
+
+                <div>
+                    <div class="section-header">Dominio de Software</div>
+                    
+                    <div class="software-category">
+                        <div class="category-title">Avanzado</div>
+                        <div class="software-list">
+                            <div class="skill-line-item">
+                                <span class="skill-name">Archicad</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="6.28"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">AutoCAD</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="6.28"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">D5 Render</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="6.28"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">Photoshop / Illustrator</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="6.28"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">SketchUp</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="6.28"></circle></svg></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="software-category">
+                        <div class="category-title">Intermedio</div>
+                        <div class="software-list">
+                            <div class="skill-line-item">
+                                <span class="skill-name">Revit</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="15.7"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">Grasshopper 3D</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="15.7"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">Rhinoceros</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="15.7"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">Enscape - Twinmotion</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="15.7"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">QGIS</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="15.7"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">V-Ray</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="15.7"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name">Neodata</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="15.7"></circle></svg></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="software-category">
+                        <div class="category-title" style="color: #888; border-left-color: #888;">En Aprendizaje</div>
+                        <div class="software-list">
+                            <div class="skill-line-item">
+                                <span class="skill-name" style="color:#888;">ComfyUI</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10" style="stroke-dasharray: 2 4;"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="47.1"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name" style="color:#888;">GitHub</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10" style="stroke-dasharray: 2 4;"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="47.1"></circle></svg></div>
+                            </div>
+                            <div class="skill-line-item">
+                                <span class="skill-name" style="color:#888;">Relux</span>
+                                <div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10" style="stroke-dasharray: 2 4;"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" data-offset="47.1"></circle></svg></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="software-ticker-wrapper">
+                    <div class="logo-ticker-container">
+                        <div class="logo-track">
+                            <img src="logo_archicad.png" class="logo-img" alt="Archicad">
+                            <img src="logo_revit.png" class="logo-img" alt="Revit">
+                            <img src="logo_rhino.png" class="logo-img" alt="Rhino">
+                            <img src="logo_grasshopper.png" class="logo-img" alt="GH">
+                            <img src="logo_sketchup.png" class="logo-img" alt="Skp">
+                            <img src="logo_autocad.png" class="logo-img" alt="CAD">
+                            <img src="logo_enscape.png" class="logo-img" alt="Enscape">
+                            <img src="logo_twinmotion.png" class="logo-img" alt="Twinmotion">
+                            <img src="logo_photoshop.png" class="logo-img" alt="Photoshop">
+                            <img src="logo_illustrator.png" class="logo-img" alt="Illustrator">
+                            <img src="logo_neodata.png" class="logo-img" alt="Neodata">
+                            <img src="logo_github.png" class="logo-img" alt="GitHub">
+                            <img src="logo_d5.png" class="logo-img" alt="D5">
+                            <img src="logo_comfyui.png" class="logo-img" alt="ComfyUI">
+                            <img src="logo_archicad.png" class="logo-img" alt="Archicad">
+                            <img src="logo_revit.png" class="logo-img" alt="Revit">
+                            <img src="logo_rhino.png" class="logo-img" alt="Rhino">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-header">Proyectos Destacados</div>
+                    
+                    <div class="render-gallery">
+                        <div class="render-caption-multi" id="gallery-caption">
+                            Museo de Arte San Pedrito Peñuelas<br>
+                            Visualización arquitectónica<br>
+                            D5 Render | Photoshop
+                        </div>
+
+                        <div class="render-display">
+                            <img src="render_01.jpg" id="mainRender" alt="Render de Proyecto" onerror="this.src='https://placehold.co/800x450/DDD/555?text=Render+01'">
+                        </div>
+                        <div class="render-controls">
+                            <button class="nav-icon" onclick="navGallery(-1)">◄</button>
+                            <div class="page-dots">
+                                <div class="page-dot active" onclick="jumpToRenderSection(1)"></div>
+                                <div class="page-dot" onclick="jumpToRenderSection(2)"></div>
+                                <div class="page-dot" onclick="jumpToRenderSection(3)"></div>
+                            </div>
+                            <button class="nav-icon" onclick="navGallery(1)">►</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-header" style="margin-top:20px;">Intereses</div>
+                    <div class="skills-list">
+                        <span class="skill-tag" style="background:#FFF;">Diseño UX/UI</span> <span class="skill-tag" style="background:#FFF;">Sketching</span>
+                        <span class="skill-tag" style="background:#FFF;">Pintura</span> <span class="skill-tag" style="background:#FFF;">Historia del Arte</span>
+                        <span class="skill-tag" style="background:#FFF;">Cultura General</span> <span class="skill-tag" style="background:#FFF;">Carpintería</span>
+                        <span class="skill-tag" style="background:#FFF;">Fotografía</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        window.addEventListener('load', () => { 
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 2200); 
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            document.documentElement.style.setProperty('--global-mouse-x', `${x}px`);
+            document.documentElement.style.setProperty('--global-mouse-y', `${y}px`);
+
+            document.querySelectorAll('.glass-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardX = x - rect.left;
+                const cardY = y - rect.top;
+                card.style.setProperty('--mouse-x', `${cardX}px`);
+                card.style.setProperty('--mouse-y', `${cardY}px`);
+            });
+
+            const gridBg = document.getElementById('grid-bg');
+            if(gridBg) {
+                const gX = (x / width - 0.5) * 20; 
+                const gY = (y / height - 0.5) * 20;
+                gridBg.style.transform = `translate(${gX}px, ${gY}px)`;
+            }
+
+            const planBg = document.querySelector('.plan-bg');
+            if(planBg) {
+                const pX = (x / width - 0.5) * -60; 
+                const pY = (y / height - 0.5) * -60;
+                planBg.style.transform = `translate(${pX}px, ${pY}px)`;
+            }
+        });
+
+        const renderData = [
+            { img: "render_01.jpg", text: "Museo de Arte San Pedrito Peñuelas<br>Visualización arquitectónica<br>D5 Render | Photoshop" },
+            { img: "render_02.jpg", text: "Vivienda Unifamiliar Zibatá<br>Modelado y Render Exterior<br>Archicad | Enscape" },
+            { img: "render_03.jpg", text: "Nave Industrial - Querétaro<br>Coordinación MEP y Estructura<br>Revit | Navisworks" },
+            { img: "render_04.jpg", text: "Proyecto Comunitario Concá<br>Análisis Urbano y Cartografía<br>QGIS | Illustrator" },
+            { img: "render_05.jpg", text: "Pabellón Paramétrico Mextrópoli<br>Diseño Generativo<br>Rhinoceros | Grasshopper" },
+            { img: "render_06.jpg", text: "Adecuación Bioclimática FI-UAQ<br>Análisis Solar y Vientos<br>Archicad | EcoDesigner" },
+            { img: "render_07.jpg", text: "Interiorismo Corporativo<br>Visualización Fotorrealista<br>D5 Render | V-Ray" },
+            { img: "render_08.jpg", text: "Conjunto Habitacional SMA<br>Masterplan e Integración<br>SketchUp | Twinmotion" },
+            { img: "render_09.jpg", text: "Estudio Lumínico Galería<br>Cálculo de Iluminación Artificial<br>Relux | AutoCAD" },
+            { img: "render_10.jpg", text: "Concept Art Arquitectónico<br>Exploración de Volumetrías AI<br>ComfyUI | Photoshop" },
+            { img: "render_11.jpg", text: "Detalle Constructivo Fachada<br>Documentación Técnica BIM<br>Archicad" },
+            { img: "render_12.jpg", text: "Plaza Pública QRO<br>Renderización Urbana<br>D5 Render | Postproducción" }
+        ];
+
+        let currentRenderIndex = 0;
+        const totalRenders = renderData.length;
+
+        function navGallery(direction) {
+            currentRenderIndex += direction;
+            if (currentRenderIndex >= totalRenders) currentRenderIndex = 0;
+            if (currentRenderIndex < 0) currentRenderIndex = totalRenders - 1;
+            updateGalleryDisplay();
+        }
+
+        function jumpToRenderSection(section) {
+            if(section === 1) currentRenderIndex = 0;
+            if(section === 2) currentRenderIndex = 4;
+            if(section === 3) currentRenderIndex = 8;
+            updateGalleryDisplay();
+        }
+
+        function updateGalleryDisplay() {
+            const img = document.getElementById('mainRender');
+            const caption = document.getElementById('gallery-caption');
+            const dots = document.querySelectorAll('.page-dot');
+            
+            img.classList.add('fade-out');
+            caption.style.opacity = 0;
+            
+            setTimeout(() => {
+                const data = renderData[currentRenderIndex];
+                
+                img.src = data.img;
+                img.onerror = () => { img.src = `https://placehold.co/800x450/DDD/555?text=Render+0${currentRenderIndex + 1}`; };
+                caption.innerHTML = data.text;
+                
+                img.classList.remove('fade-out');
+                caption.style.opacity = 1;
+                
+                dots.forEach(d => d.classList.remove('active'));
+                if (currentRenderIndex < 4) dots[0].classList.add('active');
+                else if (currentRenderIndex < 8) dots[1].classList.add('active');
+                else dots[2].classList.add('active');
+
+            }, 300);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.querySelectorAll('.bar-fill').forEach(bar => {
+                            bar.style.width = bar.getAttribute('data-width');
+                        });
+                        entry.target.querySelectorAll('.mini-circle-progress').forEach(circle => {
+                            circle.style.strokeDashoffset = circle.getAttribute('data-offset');
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            const cvSection = document.getElementById('cv');
+            if(cvSection) observer.observe(cvSection);
+        });
+    </script>
+</body>
+</html>
