@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Sebastián CH - Arquitectura & BIM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Pinstripe:ital@0;1&family=Changa:wght@700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        @page {
+            size: letter;
+            margin: 0mm; /* Quitamos márgenes del navegador para eliminar la URL y fecha automáticas */
+        }
+
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            min-height: 100vh; 
+            background-color: #F6F7F9; 
+            font-family: 'Montserrat', sans-serif;
+            color: #333333;
+            line-height: 1.5;
+            -webkit-print-color-adjust: exact !important; /* Fuerza los colores de fondo en todo momento */
+            print-color-adjust: exact !important;
+        }
+
+        #cv-container {
+            max-width: 1000px; 
+            margin: 0 auto;
+            padding: 20px 20px;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-main-row {
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .page-label { 
+            font-size: 1.1rem; 
+            letter-spacing: 0.1em; 
+            font-weight: 700; 
+            color: #000;
+            margin: 0;
+        }
+
+        .contact-mail { 
+            font-family: 'Consolas', 'Lucida Console', monospace; 
+            font-size: 0.9rem; 
+            color: #555; 
+            text-decoration: none; 
+            font-weight: 500;
+        }
+
+        .page-subtitle {
+            font-size: 0.75rem; 
+            color: #555;
+            font-weight: 400;
+            margin-top: 5px;
+        }
+        
+        .nav-btn {
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            letter-spacing: 0.05em;
+            padding: 8px 18px; 
+            border: 2px solid #280D8C !important; /* !important para forzar el color impreso */
+            background-color: #280D8C !important; 
+            color: #FFF !important; 
+            transition: all 0.2s ease; 
+            font-weight: 600;
+            border-radius: 6px;
+            display: inline-block; /* Asegura que mantenga la forma de caja */
+        }
+
+        .cv-grid {
+            display: grid; 
+            grid-template-columns: 1fr 1.6fr; 
+            gap: 20px; 
+            align-items: stretch;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 10px;
+            padding: 20px 25px; 
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); 
+            border: 1px solid #EAEAEA;
+            box-sizing: border-box;
+            page-break-inside: avoid; 
+        }
+        
+        .left-col, .right-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .profile-img-container {
+            width: 100%; 
+            max-width: 180px; 
+            aspect-ratio: 3 / 4; 
+            background-color: #FAFAFA; 
+            border: 1px solid #EAEAEA; 
+            border-radius: 8px;
+            margin: 0 auto 15px auto; 
+            padding: 20px; 
+            box-sizing: border-box;
+        }
+
+        .profile-img-container img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            object-position: top center; 
+            border-radius: 4px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+            display: block; 
+        }
+
+        .role-title { 
+            font-family: 'Alumni Sans Pinstripe', sans-serif; 
+            font-size: 3rem; 
+            line-height: 0.9; 
+            text-transform: uppercase; 
+            margin: 0 0 15px 0;
+            color: #280D8C; 
+        }
+
+        .profile-desc { 
+            font-size: 0.85rem; 
+            color: #444; 
+            margin-bottom: 25px; 
+            text-align: justify;
+        }
+        
+        .section-header {
+            font-family: 'Changa', sans-serif; 
+            font-size: 1.1rem; 
+            text-transform: uppercase;
+            letter-spacing: 0.05em; 
+            margin-bottom: 15px; 
+            border-bottom: 2px solid #280D8C; 
+            padding-bottom: 5px;
+            color: #280D8C; 
+        }
+
+        .timeline-item { margin-bottom: 15px; }
+        .timeline-date { font-size: 0.75rem; color: #666; font-weight: 600; margin-bottom: 2px; }
+        .timeline-role { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #111; }
+        .timeline-place { font-size: 0.85rem; font-style: italic; color: #555; margin-bottom: 4px; }
+        .timeline-details { font-size: 0.8rem; color: #555; line-height: 1.4; }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .bottom-grid .section-header {
+            font-size: 0.95rem; 
+            margin-bottom: 10px;
+        }
+
+        .skills-list { display: flex; flex-wrap: wrap; gap: 6px; }
+        .skill-tag {
+            font-size: 0.65rem; padding: 5px 10px; 
+            background-color: #F0F2F5 !important; /* !important para forzar el fondo impreso */
+            border-radius: 15px; color: #333; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        .languages-container { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            margin-bottom: 25px; 
+        }
+        .language-group { width: 100%; }
+        .lang-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; color: #333;}
+        .bar-container { width: 100%; height: 5px; background-color: #E0E0E0 !important; border-radius: 3px; overflow: hidden; }
+        .bar-fill { height: 100%; background-color: #280D8C !important; }
+
+        .software-category { margin-bottom: 18px; }
+        .category-title {
+            font-size: 0.75rem; font-weight: 700; color: #444; text-transform: uppercase; 
+            margin-bottom: 10px; border-left: 3px solid #280D8C; padding-left: 8px;
+        }
+        .software-list { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 8px 15px; 
+        }
+        
+        .skill-line-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 4px; border-bottom: 1px solid #EAEAEA;
+        }
+        
+        .skill-name { font-size: 0.7rem; font-weight: 600; color: #333; text-transform: uppercase; }
+        
+        .mini-circle-wrapper { width: 16px; height: 16px; }
+        .mini-circle-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+        .mini-circle-bg { fill: none; stroke: #EAEAEA !important; stroke-width: 4; }
+        .mini-circle-progress { 
+            fill: none; stroke: #280D8C !important; stroke-width: 4; stroke-linecap: round; 
+            stroke-dasharray: 62.83; 
+        }
+
+        @media print {
+            @page {
+                size: letter; 
+                margin: 0mm; 
+            }
+            
+            html {
+                font-size: 11.5px !important; 
+            }
+            
+            body { 
+                background-color: #FFF !important; 
+                line-height: 1.35; 
+                margin: 0; 
+                padding: 0; 
+            }
+            
+            #cv-container { 
+                padding: 10mm 15mm; 
+                max-width: 100%; 
+            } 
+            
+            .cv-grid { gap: 15px; margin-bottom: 12px; }
+            .bottom-grid { gap: 15px; }
+            
+            .card { 
+                box-shadow: none !important; 
+                border: 1px solid #CCC !important; 
+                padding: 12px 18px; 
+            }
+            
+            .profile-img-container { 
+                max-width: 110px; 
+                margin-bottom: 10px; 
+                padding: 6px; 
+            }
+            
+            .role-title { margin-bottom: 8px; margin-top: -5px; }
+            .profile-desc { margin-bottom: 12px; line-height: 1.4; }
+            .section-header { margin-bottom: 8px; padding-bottom: 2px; border-bottom-width: 1px; }
+            
+            .timeline-item { margin-bottom: 8px; }
+            .timeline-date { margin-bottom: 0; }
+            .timeline-place { margin-bottom: 2px; }
+            .timeline-details { line-height: 1.25; }
+            
+            .languages-container { margin-bottom: 12px; gap: 8px; }
+            .software-sections-wrapper { gap: 10px; }
+            .software-category { margin-bottom: 8px; }
+            .category-title { margin-bottom: 5px; padding-left: 5px; border-left-width: 2px;}
+            .skill-line-item { padding-bottom: 2px; }
+            
+            .header-section { margin-bottom: 15px; }
+
+            /* Restauramos el botón explícitamente para impresión */
+            .nav-btn {
+                border: 2px solid #280D8C !important;
+                background-color: #280D8C !important;
+                color: #FFF !important;
+                padding: 6px 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cv-grid, .bottom-grid { 
+                grid-template-columns: 1fr; 
+                gap: 15px; 
+            }
+            .header-section { flex-direction: column; align-items: flex-start; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cv-container">
+        
+        <header class="header-section">
+            <div class="header-left">
+                <div class="header-main-row">
+                    <h1 class="page-label">SEBASTIÁN CH | 2026</h1>
+                    <a href="mailto:sebas.cham@gmail.com" class="contact-mail">sebas.cham@gmail.com</a>
+                </div>
+                <div class="page-subtitle">Arquitectura | BIM | Diseño Paramétrico | Visualización | Planeación Urbana</div>
+            </div>
+            
+            <div>
+                <a href="tel:+527295564762" class="nav-btn">+52 (729) 556 4762</a>
+            </div>
+        </header>
+
+        <main class="cv-grid">
+            
+            <div class="left-col card">
+                <div class="profile-img-container">
+                    <img src="WhatsApp Image 2026-07-01 at 2.51.42 PM-effectapp (1).png" alt="Sebastián CH" onerror="this.src='https://placehold.co/600x800/EEE/333?text=FOTO+PERFIL'">
+                </div>
+
+                <h2 class="section-header">Formación Académica</h2>
+                <div class="timeline-item">
+                    <div class="timeline-date">2021 - 2026 (10º Semestre)</div>
+                    <div class="timeline-role">Licenciatura en Arquitectura</div>
+                    <div class="timeline-place">Universidad Autónoma de Querétaro (UAQ)</div>
+                </div>
+
+                <h2 class="section-header">Experiencia Profesional</h2>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026-01</div>
+                    <div class="timeline-role">PASANTÍA</div>
+                    <div class="timeline-place">XQSOMOSARQ</div>
+                    <div class="timeline-details">Participé en el diseño arquitectónico de proyectos de vivienda unifamiliar y naves industriales, con diseño y cálculo de instalaciones hidráulicas, eléctricas y de gas.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026-01</div>
+                    <div class="timeline-role">PRÁCTICAS PROFESIONALES</div>
+                    <div class="timeline-place">Asistente de investigación urbanística - Dr. Miguel Ángel Bartorila</div>
+                    <div class="timeline-details">Desarrollo de estrategias urbanas y análisis territorial para la planeación futura de la comunidad de Concá. Elaboración de cartografía avanzada en QGIS y representación de información espacial.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2025 (Servicio Social)</div>
+                    <div class="timeline-role">Despacho de Proyectos FI-UAQ</div>
+                    <div class="timeline-place">Facultad de Ingeniería</div>
+                    <div class="timeline-details">Ejecución de levantamientos arquitectónicos, remodelación y adecuación bioclimática. Elaboración de catálogos de conceptos y estimación de costos preliminares.</div>
+                </div>
+                <div class="timeline-item" style="margin-bottom: 0;">
+                    <div class="timeline-date">2023 - Actualidad</div>
+                    <div class="timeline-role">Freelance BIM & Modelado 3D</div>
+                    <div class="timeline-place">Colaboración con Arq. Alejandro Guerra</div>
+                </div>
+            </div>
+
+            <div class="right-col card">
+                <h1 class="role-title">Diseñador Arquitectónico <br><span style="font-size: 0.45em; color: #555;">BIM, MEP & Procesos Digitales</span></h1>
+                <div class="profile-desc">
+                    Estudiante de arquitectura en etapa final de formación. Mi práctica integra diseño arquitectónico, modelado BIM y herramientas digitales para optimizar procesos de representación y desarrollo de proyectos.
+                </div>
+
+                <h2 class="section-header">Idiomas</h2>
+                <div class="languages-container">
+                    <div class="language-group">
+                        <div class="lang-label"><span>Inglés (C2)</span><span>Avanzado</span></div>
+                        <div class="bar-container"><div class="bar-fill" style="width: 95%;"></div></div>
+                    </div>
+                    <div class="language-group">
+                        <div class="lang-label"><span>Italiano (B1)</span><span>Intermedio</span></div>
+                        <div class="bar-container"><div class="bar-fill" style="width: 50%;"></div></div>
+                    </div>
+                    <div class="language-group">
+                        <div class="lang-label"><span>Francés (A2)</span><span>Básico</span></div>
+                        <div class="bar-container"><div class="bar-fill" style="width: 25%;"></div></div>
+                    </div>
+                </div>
+
+                <h2 class="section-header" style="margin-top: 15px;">Dominio de Software</h2>
+                
+                <div class="software-category">
+                    <div class="category-title">Avanzado</div>
+                    <div class="software-list">
+                        <div class="skill-line-item"><span class="skill-name">Archicad</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="6.28"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name">AutoCAD</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="6.28"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name">D5 Render</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="6.28"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name">Ps / Ai</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="6.28"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name">SketchUp</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="6.28"></circle></svg></div></div>
+                    </div>
+                </div>
+
+                <div class="software-category">
+                    <div class="category-title">Intermedio</div>
+                    <div class="software-list">
+                        <div class="skill-line-item"><span class="skill-name">Revit</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="15.7"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name">Grasshopper</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="15.7"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name">Rhinoceros</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="15.7"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name">Enscape / Tm</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="15.7"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name">QGIS</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="15.7"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name">V-Ray</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="15.7"></circle></svg></div></div>
+                    </div>
+                </div>
+
+                <div class="software-category" style="margin-bottom: 0;">
+                    <div class="category-title" style="color: #888; border-color: #CCC;">Aprendizaje</div>
+                    <div class="software-list">
+                        <div class="skill-line-item"><span class="skill-name" style="color:#777;">ComfyUI</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10" style="stroke-dasharray: 2 4;"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="47.1" stroke="#888"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name" style="color:#777;">GitHub</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10" style="stroke-dasharray: 2 4;"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="47.1" stroke="#888"></circle></svg></div></div>
+                        <div class="skill-line-item"><span class="skill-name" style="color:#777;">Relux</span><div class="mini-circle-wrapper"><svg class="mini-circle-svg" viewBox="0 0 24 24"><circle class="mini-circle-bg" cx="12" cy="12" r="10" style="stroke-dasharray: 2 4;"></circle><circle class="mini-circle-progress" cx="12" cy="12" r="10" stroke-dashoffset="47.1" stroke="#888"></circle></svg></div></div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <div class="card bottom-grid">
+            <div>
+                <h2 class="section-header">Habilidades</h2>
+                <div class="skills-list">
+                    <span class="skill-tag">Liderazgo</span>
+                    <span class="skill-tag">Adaptabilidad</span>
+                    <span class="skill-tag">Pensamiento Crítico</span>
+                    <span class="skill-tag">Resolución de Conflictos</span>
+                    <span class="skill-tag">Atención al Detalle</span>
+                    <span class="skill-tag">Gestión de Datos BIM</span>
+                </div>
+            </div>
+            
+            <div>
+                <h2 class="section-header">Reconocimientos & Cursos</h2>
+                <div class="timeline-item" style="margin-bottom: 8px;">
+                    <div class="timeline-role" style="font-size: 0.75rem;">CONCURSO DE ARQ E INTERIORISMO</div>
+                    <div class="timeline-details" style="font-size: 0.7rem;">SHERWIN WILLIAMS | Actualmente participando.</div>
+                </div>
+                <div class="timeline-item" style="margin-bottom: 8px;">
+                    <div class="timeline-role" style="font-size: 0.75rem;">Archicad BIM Certification</div>
+                    <div class="timeline-details" style="font-size: 0.7rem;">BIM AUTHOR (Graphisoft).</div>
+                </div>
+                <div class="timeline-item" style="margin-bottom: 0;">
+                    <div class="timeline-role" style="font-size: 0.75rem;">INSTALACIONES DE GAS L.P.</div>
+                    <div class="timeline-details" style="font-size: 0.7rem;">Colegio de Arquitectos del Edo. de Querétaro.</div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="section-header">Intereses</h2>
+                <div class="skills-list">
+                    <span class="skill-tag">Diseño UX/UI</span> 
+                    <span class="skill-tag">Sketching</span>
+                    <span class="skill-tag">Pintura</span> 
+                    <span class="skill-tag">Historia del Arte</span>
+                    <span class="skill-tag">Cultura General</span> 
+                    <span class="skill-tag">Carpintería</span>
+                    <span class="skill-tag">Fotografía</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
